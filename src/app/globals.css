@@ -1,21 +1,56 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* PuntoHack Brand Colors */
+  --background: #fafafa;
+  --foreground: #0b0d0e;
+  
+  /* Primary Colors */
+  --primary: #606fe5;
+  --primary-hover: #5f6ee3;
+  --primary-dark: #4a4aca;
+  
+  /* Text Colors */
+  --text-primary: #0b0d0e;
+  --text-secondary: #020202;
+  --text-muted: #5c5f6e;
+  
+  /* Background Colors */
+  --bg-subtle: #f9f7f0;
+  --bg-muted: #ebe8e0;
+  --bg-accent: #ececfe;
+  
+  /* Accent Colors */
+  --accent-success: #19a44b;
+  --accent-warning: #ffc20e;
+  --accent-error: #e43157;
+  --accent-info: #009ee3;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  
+  /* PuntoHack Custom Colors */
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-bg-muted: var(--bg-muted);
+  
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0e0f10;
+    --foreground: #fafafa;
+    --text-primary: #fafafa;
+    --text-secondary: #ebe8e0;
+    --text-muted: #838696;
   }
 }
 

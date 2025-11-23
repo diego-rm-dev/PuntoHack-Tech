@@ -1,9 +1,8 @@
-import { Plus, Search } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { HackathonCard } from '@/components/hackathons/hackathon-card';
+import { SearchBar, FilterBadges } from '@/components/ui/search-filters';
 import { listHackathonsQuery } from '@/modules/hackathons';
 import { getCurrentUser } from '@/core/auth';
 import { canManageHackathon } from '@/core/rbac';
@@ -63,60 +62,23 @@ export default async function HackathonsPage({
           </div>
 
           {/* Filters */}
-          <div className="mt-6 flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-              <Input
-                type="search"
-                placeholder="Buscar hackathons..."
-                defaultValue={searchParams.search}
-                className="pl-10"
-                name="search"
-              />
-            </div>
+          <div className="mt-6 space-y-4">
+            <SearchBar
+              placeholder="Buscar hackathons por nombre..."
+              defaultValue={searchParams.search}
+            />
 
-            <div className="flex gap-2 overflow-x-auto pb-2">
-              <Link href="/hackathons">
-                <Badge
-                  variant={!searchParams.status || searchParams.status === 'all' ? 'default' : 'outline'}
-                  className="cursor-pointer whitespace-nowrap"
-                >
-                  Todos
-                </Badge>
-              </Link>
-              <Link href="/hackathons?status=REGISTRATION">
-                <Badge
-                  variant={searchParams.status === 'REGISTRATION' ? 'success' : 'outline'}
-                  className="cursor-pointer whitespace-nowrap"
-                >
-                  Inscripción Abierta
-                </Badge>
-              </Link>
-              <Link href="/hackathons?status=RUNNING">
-                <Badge
-                  variant={searchParams.status === 'RUNNING' ? 'info' : 'outline'}
-                  className="cursor-pointer whitespace-nowrap"
-                >
-                  En Curso
-                </Badge>
-              </Link>
-              <Link href="/hackathons?status=JUDGING">
-                <Badge
-                  variant={searchParams.status === 'JUDGING' ? 'warning' : 'outline'}
-                  className="cursor-pointer whitespace-nowrap"
-                >
-                  Evaluación
-                </Badge>
-              </Link>
-              <Link href="/hackathons?status=FINISHED">
-                <Badge
-                  variant={searchParams.status === 'FINISHED' ? 'default' : 'outline'}
-                  className="cursor-pointer whitespace-nowrap"
-                >
-                  Finalizados
-                </Badge>
-              </Link>
-            </div>
+            <FilterBadges
+              options={[
+                { value: 'all', label: 'Todos', count: total },
+                { value: 'REGISTRATION', label: 'Inscripción Abierta' },
+                { value: 'RUNNING', label: 'En Curso' },
+                { value: 'JUDGING', label: 'Evaluación' },
+                { value: 'FINISHED', label: 'Finalizados' },
+              ]}
+              selected={searchParams.status || 'all'}
+              paramName="status"
+            />
           </div>
         </div>
       </div>
@@ -126,7 +88,7 @@ export default async function HackathonsPage({
         {hackathons.length === 0 ? (
           <div className="text-center py-12">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 mb-4">
-              <Search className="h-8 w-8 text-slate-400" />
+              <Plus className="h-8 w-8 text-slate-400" />
             </div>
             <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-50 mb-2">
               No se encontraron hackathons

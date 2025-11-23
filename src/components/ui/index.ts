@@ -16,3 +16,10 @@ export * from './label';
 export * from './card';
 export * from './badge';
 export * from './separator';
+
+// Advanced components
+export * from './rich-text-editor';
+export * from './date-time-picker';
+export * from './image-upload';
+export * from './search-filters';
+

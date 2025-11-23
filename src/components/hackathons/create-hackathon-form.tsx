@@ -6,11 +6,13 @@ import { ArrowLeft, Calendar, Info, Plus, X } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { RichTextEditor } from '@/components/ui/rich-text-editor';
+import { DateTimePicker, dateToDateTimeLocal } from '@/components/ui/date-time-picker';
+import { ImageUrlInput } from '@/components/ui/image-upload';
 import { createHackathon } from '@/modules/hackathons';
 
 interface Criterion {
@@ -25,6 +27,8 @@ export function CreateHackathonForm() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [description, setDescription] = useState('');
+  const [bannerUrl, setBannerUrl] = useState('');
   const [criteria, setCriteria] = useState<Criterion[]>([
     { id: '1', name: 'Innovación', description: 'Originalidad de la idea', weight: 3, maxScore: 10 },
     { id: '2', name: 'Impacto', description: 'Impacto potencial de la solución', weight: 3, maxScore: 10 },
@@ -131,16 +135,23 @@ export function CreateHackathonForm() {
 
           <div className="space-y-2">
             <Label htmlFor="description">Descripción *</Label>
-            <Textarea
-              id="description"
-              name="description"
+            <RichTextEditor
+              content={description}
+              onChange={setDescription}
               placeholder="Describe tu hackathon, los objetivos, y qué esperas que los participantes construyan..."
-              rows={4}
-              required
-              minLength={50}
+              minHeight="200px"
             />
-            <p className="text-xs text-slate-500">Mínimo 50 caracteres</p>
+            <input type="hidden" name="description" value={description} required />
+            <p className="text-xs text-slate-500">Usa el editor para formatear tu descripción</p>
           </div>
+
+          <ImageUrlInput
+            name="bannerUrl"
+            label="Imagen del Banner (opcional)"
+            value={bannerUrl}
+            onChange={setBannerUrl}
+            helperText="URL de la imagen principal del hackathon (16:9 ratio recomendado)"
+          />
         </CardContent>
       </Card>
 
@@ -157,65 +168,47 @@ export function CreateHackathonForm() {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="registrationOpensAt">Apertura de Inscripciones *</Label>
-              <Input
-                id="registrationOpensAt"
-                name="registrationOpensAt"
-                type="datetime-local"
-                required
-              />
-            </div>
+            <DateTimePicker
+              name="registrationOpensAt"
+              label="Apertura de Inscripciones"
+              required
+              helperText="Cuándo pueden empezar a registrarse"
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="registrationClosesAt">Cierre de Inscripciones *</Label>
-              <Input
-                id="registrationClosesAt"
-                name="registrationClosesAt"
-                type="datetime-local"
-                required
-              />
-            </div>
+            <DateTimePicker
+              name="registrationClosesAt"
+              label="Cierre de Inscripciones"
+              required
+              helperText="Hasta cuándo pueden registrarse"
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="startsAt">Inicio del Hackathon *</Label>
-              <Input
-                id="startsAt"
-                name="startsAt"
-                type="datetime-local"
-                required
-              />
-            </div>
+            <DateTimePicker
+              name="startsAt"
+              label="Inicio del Hackathon"
+              required
+              helperText="Fecha y hora de inicio del evento"
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="endsAt">Fin del Hackathon *</Label>
-              <Input
-                id="endsAt"
-                name="endsAt"
-                type="datetime-local"
-                required
-              />
-            </div>
+            <DateTimePicker
+              name="endsAt"
+              label="Fin del Hackathon"
+              required
+              helperText="Fecha y hora de finalización"
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="judgingStartsAt">Inicio de Evaluación *</Label>
-              <Input
-                id="judgingStartsAt"
-                name="judgingStartsAt"
-                type="datetime-local"
-                required
-              />
-            </div>
+            <DateTimePicker
+              name="judgingStartsAt"
+              label="Inicio de Evaluación"
+              required
+              helperText="Cuándo empieza la evaluación"
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="judgingEndsAt">Fin de Evaluación *</Label>
-              <Input
-                id="judgingEndsAt"
-                name="judgingEndsAt"
-                type="datetime-local"
-                required
-              />
-            </div>
+            <DateTimePicker
+              name="judgingEndsAt"
+              label="Fin de Evaluación"
+              required
+              helperText="Cuándo termina la evaluación"
+            />
           </div>
         </CardContent>
       </Card>

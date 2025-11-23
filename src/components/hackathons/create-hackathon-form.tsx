@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
-import { DateTimePicker, dateToDateTimeLocal } from '@/components/ui/date-time-picker';
+import { DateTimePicker } from '@/components/ui/date-time-picker';
 import { ImageUrlInput } from '@/components/ui/image-upload';
 import { createHackathon } from '@/modules/hackathons';
 

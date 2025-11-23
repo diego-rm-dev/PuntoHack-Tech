@@ -15,6 +15,7 @@ import type {
   Criterion,
   CreateCriterionInput,
   UpdateCriterionInput,
+  ParticipantProfile,
 } from './types';
 
 // ============================================
@@ -114,7 +115,7 @@ export async function getHackathonBySlug(slug: string): Promise<HackathonWithRel
 
   return {
     ...data,
-    participations: data.hackathon_participations.map((p: any) => ({
+    participations: (data.hackathon_participations || []).map((p: { profiles: { id: string; name: string; avatarUrl: string | null; role: string } }) => ({
       profile: {
         id: p.profiles.id,
         name: p.profiles.name,
@@ -198,7 +199,7 @@ export async function updateHackathon(
 ): Promise<Hackathon> {
   const supabase = await createClient();
 
-  const updateData: any = {
+  const updateData: Record<string, string | number | boolean | Date> = {
     ...data,
     updatedAt: new Date().toISOString(),
   };
@@ -398,6 +399,36 @@ export async function isParticipantRegistered(
     .single();
 
   return !error && data !== null;
+}
+
+export async function getParticipantsByHackathonId(hackathonId: string): Promise<ParticipantProfile[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('hackathon_participations')
+    .select(`
+      profile:profiles(
+        id,
+        name,
+        email,
+        role,
+        avatarUrl,
+        createdAt
+      )
+    `)
+    .eq('hackathonId', hackathonId);
+
+  if (error) {
+    throw new Error(`Failed to fetch participants: ${error.message}`);
+  }
+
+  // Extract profiles from the nested structure
+  interface SupabaseParticipationRow {
+    profile: ParticipantProfile;
+  }
+  return ((data as unknown) as SupabaseParticipationRow[] || [])
+    .map((p) => p.profile)
+    .filter((profile): profile is ParticipantProfile => profile !== null);
 }
 
 // ============================================

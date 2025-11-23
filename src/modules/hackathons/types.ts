@@ -23,6 +23,11 @@ export interface Hackathon {
   judgingEndsAt: Date;
   maxTeamSize: number;
   minTeamSize: number;
+  maxTeams?: number | null;
+  imageUrl?: string | null;
+  prizes?: string | null;
+  rules?: string | null;
+  organizerId?: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -42,6 +47,15 @@ export interface HackathonParticipation {
   id: string;
   hackathonId: string;
   profileId: string;
+  createdAt: Date;
+}
+
+export interface ParticipantProfile {
+  id: string;
+  name: string;
+  email: string | null;
+  role: string;
+  avatarUrl: string | null;
   createdAt: Date;
 }
 
@@ -76,6 +90,11 @@ export interface HackathonWithRelations extends Hackathon {
     teams: number;
     submissions: number;
   };
+  imageUrl?: string | null;
+  maxTeams?: number | null;
+  prizes?: string | null;
+  rules?: string | null;
+  organizerId?: string | null;
 }
 
 // ============================================

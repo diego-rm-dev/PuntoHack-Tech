@@ -6,11 +6,16 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
+import { HackathonStatus } from '@prisma/client';
 import { requireAuth } from '@/core/auth';
 import { requireRole } from '@/core/rbac';
 import { captureError } from '@/core/errors';
-import type { ActionResult, ListHackathonsFilters, HackathonsListResponse } from './types';
+import type { 
+  ActionResult, 
+  ListHackathonsFilters, 
+  HackathonsListResponse,
+  UpdateHackathonInput,
+} from './types';
 import {
   createHackathonSchema,
   updateHackathonSchema,
@@ -31,6 +36,8 @@ import {
   updateCriterion as updateCriterionQuery,
   deleteCriterion as deleteCriterionQuery,
   getHackathonById,
+  getCriteriaByHackathon,
+  getParticipantsByHackathonId,
 } from './queries';
 import { getProfileByUserId as getUserProfile } from '@/modules/users/queries';
 
@@ -118,7 +125,7 @@ export async function updateHackathon(
     await requireRole(['ORGANIZER', 'ADMIN']);
 
     // Extract and validate form data
-    const rawData: any = {};
+    const rawData: Partial<UpdateHackathonInput> = {};
 
     if (formData.has('name')) rawData.name = formData.get('name') as string;
     if (formData.has('slug')) rawData.slug = formData.get('slug') as string;
@@ -137,7 +144,7 @@ export async function updateHackathon(
       rawData.maxTeamSize = parseInt(formData.get('maxTeamSize') as string);
     if (formData.has('minTeamSize'))
       rawData.minTeamSize = parseInt(formData.get('minTeamSize') as string);
-    if (formData.has('status')) rawData.status = formData.get('status') as string;
+    if (formData.has('status')) rawData.status = formData.get('status') as HackathonStatus;
 
     const validation = updateHackathonSchema.safeParse(rawData);
     if (!validation.success) {
@@ -441,7 +448,7 @@ export async function updateCriterion(
     await requireRole(['ORGANIZER', 'ADMIN']);
 
     // Extract and validate form data
-    const rawData: any = {};
+    const rawData: Record<string, string | number> = {};
 
     if (formData.has('name')) rawData.name = formData.get('name') as string;
     if (formData.has('description')) rawData.description = formData.get('description') as string;
@@ -498,6 +505,238 @@ export async function deleteCriterion(id: string): Promise<ActionResult<void>> {
     return {
       success: false,
       error: 'Error al eliminar criterio',
+    };
+  }
+}
+
+/**
+ * Get criteria by hackathon ID
+ */
+export async function getCriteriaByHackathonId(
+  hackathonId: string
+) {
+  try {
+    const criteria = await getCriteriaByHackathon(hackathonId);
+
+    return {
+      success: true,
+      data: criteria,
+    };
+  } catch (error) {
+    captureError(error, {
+      context: 'getCriteriaByHackathonId',
+      extra: { hackathonId },
+    });
+    return {
+      success: false,
+      error: 'Error al obtener criterios',
+    };
+  }
+}
+
+/**
+ * Get participants by hackathon ID
+ */
+export async function getParticipantsByHackathonIdAction(
+  hackathonId: string
+) {
+  try {
+    const participants = await getParticipantsByHackathonId(hackathonId);
+
+    return {
+      success: true,
+      data: participants,
+    };
+  } catch (error) {
+    captureError(error, {
+      context: 'getParticipantsByHackathonId',
+      extra: { hackathonId },
+    });
+    return {
+      success: false,
+      error: 'Error al obtener participantes',
+    };
+  }
+}
+
+/**
+ * Update hackathon status (ORGANIZER + ADMIN only)
+ */
+export async function updateHackathonStatus(
+  id: string,
+  status: HackathonStatus
+): Promise<ActionResult<void>> {
+  try {
+    // Get user with profile (required for permission check)
+    const user = await requireAuth();
+
+    // Get hackathon
+    const hackathon = await getHackathonById(id);
+    if (!hackathon) {
+      return {
+        success: false,
+        error: 'Hackathon no encontrado',
+      };
+    }
+
+    // Check permissions - user must be admin
+    // Note: organizerId is not part of Hackathon type in queries
+    // This would need to be checked against profile ownership or admin role
+    if (user.profile.role !== 'ADMIN') {
+      return {
+        success: false,
+        error: 'No tienes permisos para modificar este hackathon',
+      };
+    }
+
+    // Update status
+    await updateHackathonQuery(id, { status });
+
+    revalidatePath(`/hackathons/${hackathon.slug}`);
+    revalidatePath(`/hackathons/${hackathon.slug}/dashboard`);
+
+    return {
+      success: true,
+      data: undefined,
+    };
+  } catch (error) {
+    captureError(error, {
+      context: 'updateHackathonStatus',
+      extra: { hackathonId: id, status },
+    });
+    return {
+      success: false,
+      error: 'Error al actualizar estado',
+    };
+  }
+}
+
+// ============================================
+// SIMPLIFIED ACTIONS FOR CLIENT COMPONENTS
+// ============================================
+
+/**
+ * Create criterion with object input (for client components)
+ */
+export async function createCriterion(
+  hackathonId: string,
+  data: { name: string; description?: string; weight: number; maxScore?: number }
+): Promise<ActionResult<{ id: string }>> {
+  try {
+    await requireRole(['ORGANIZER', 'ADMIN']);
+
+    const validation = createCriterionSchema.safeParse({
+      name: data.name,
+      description: data.description || undefined,
+      weight: data.weight,
+      maxScore: data.maxScore || 10,
+    });
+
+    if (!validation.success) {
+      return {
+        success: false,
+        error: validation.error.issues[0]?.message || 'Datos inválidos',
+      };
+    }
+
+    const criterion = await createCriterionQuery(hackathonId, validation.data);
+
+    const hackathon = await getHackathonById(hackathonId);
+    if (hackathon) {
+      revalidatePath(`/hackathons/${hackathon.slug}`);
+      revalidatePath(`/hackathons/${hackathon.slug}/dashboard`);
+    }
+
+    return {
+      success: true,
+      data: { id: criterion.id },
+    };
+  } catch (error) {
+    captureError(error, {
+      context: 'createCriterion',
+      extra: { hackathonId, data },
+    });
+    return {
+      success: false,
+      error: 'Error al crear criterio',
+    };
+  }
+}
+
+/**
+ * Update criterion with object input (for client components)
+ */
+export async function updateCriterionSimple(
+  id: string,
+  data: { name?: string; description?: string; weight?: number; maxScore?: number }
+): Promise<ActionResult<void>> {
+  try {
+    await requireRole(['ORGANIZER', 'ADMIN']);
+
+    const validation = updateCriterionSchema.safeParse(data);
+    if (!validation.success) {
+      return {
+        success: false,
+        error: validation.error.issues[0]?.message || 'Datos inválidos',
+      };
+    }
+
+    await updateCriterionQuery(id, validation.data);
+
+    return {
+      success: true,
+      data: undefined,
+    };
+  } catch (error) {
+    captureError(error, {
+      context: 'updateCriterionSimple',
+      extra: { criterionId: id, data },
+    });
+    return {
+      success: false,
+      error: 'Error al actualizar criterio',
+    };
+  }
+}
+
+/**
+ * Update hackathon with object input (for client components)
+ */
+export async function updateHackathonSimple(
+  id: string,
+  data: Partial<UpdateHackathonInput>
+): Promise<ActionResult<void>> {
+  try {
+    await requireRole(['ORGANIZER', 'ADMIN']);
+
+    const validation = updateHackathonSchema.safeParse(data);
+    if (!validation.success) {
+      return {
+        success: false,
+        error: validation.error.issues[0]?.message || 'Datos inválidos',
+      };
+    }
+
+    await updateHackathonQuery(id, validation.data);
+
+    const hackathon = await getHackathonById(id);
+    if (hackathon) {
+      revalidatePath(`/hackathons/${hackathon.slug}`);
+      revalidatePath(`/hackathons/${hackathon.slug}/dashboard`);
+    }
+
+    return {
+      success: true,
+      data: undefined,
+    };
+  } catch (error) {
+    captureError(error, {
+      context: 'updateHackathonSimple',
+      extra: { hackathonId: id, data },
+    });
+    return {
+      success: false,
+      error: 'Error al actualizar hackathon',
     };
   }
 }

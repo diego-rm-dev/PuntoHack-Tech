@@ -1,15 +1,79 @@
-# 🚀 PuntoHack MVP Pro - Application
+```
+ ____             _        _   _            _    
+|  _ \ _   _ _ __ | |_ ___ | | | | __ _  ___| | __
+| |_) | | | | '_ \| __/ _ \| |_| |/ _` |/ __| |/ /
+|  __/| |_| | | | | || (_) |  _  | (_| | (__|   < 
+|_|    \__,_|_| |_|\__\___/|_| |_|\__,_|\___|_|\_\
+                                                   
+         MVP - Hackathon Management Platform       
+```
 
-Professional hackathon management platform built with Next.js 15, Prisma, and Supabase.
+# 🚀 PuntoHack MVP
+
+Professional hackathon management platform built with **Next.js 16**, **Prisma**, **Supabase**, and **Clerk**.
+
+[![Next.js](https://img.shields.io/badge/Next.js-16.0-black?logo=next.js)](https://nextjs.org)
+[![React](https://img.shields.io/badge/React-19.2-blue?logo=react)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)](https://www.typescriptlang.org)
+[![Prisma](https://img.shields.io/badge/Prisma-7.0-2D3748?logo=prisma)](https://www.prisma.io)
+[![Tailwind](https://img.shields.io/badge/Tailwind-4.x-38B2AC?logo=tailwind-css)](https://tailwindcss.com)
+
+---
+
+## 📊 Estado del Proyecto
+
+```
+Phase 0: ████████████████████ 100% ✅ Infrastructure Core
+Phase 1: ░░░░░░░░░░░░░░░░░░░░   0% 🔨 Hackathons Module
+Phase 2: ░░░░░░░░░░░░░░░░░░░░   0% ⏳ Teams & Evaluation
+Phase 3: ░░░░░░░░░░░░░░░░░░░░   0% ⏳ Sponsors & Challenges
+
+Total MVP Progress: 25% (1/4 phases complete)
+```
+
+**Latest Update**: Phase 0 completada - RBAC 100% funcional con UI de gestión de usuarios.
+
+---
+
+## ✨ Características Principales
+
+### ✅ Implementado (Phase 0)
+
+- 🔐 **Authentication**: Clerk integration con SSO
+- 👥 **RBAC System**: 5 roles (ADMIN, ORGANIZER, JUDGE, SPONSOR, PARTICIPANT)
+- 🎨 **Admin Panel**: Gestión completa de usuarios y roles
+- 📝 **Onboarding**: Flujo de registro con selección de rol
+- 💾 **Database**: PostgreSQL (Neon) con Prisma ORM
+- ⚡ **Real-time**: Supabase client para actualizaciones en vivo
+- 🐛 **Error Tracking**: Sentry con filtros inteligentes
+- 🎯 **Module Pattern**: Arquitectura modular escalable
+
+### 🔨 En Desarrollo (Phase 1)
+
+- 🎪 **Hackathons CRUD**: Crear, editar, eliminar eventos
+- 📋 **Criteria Management**: Definir criterios de evaluación
+- 👤 **Organizer Dashboard**: Estadísticas y gestión
+- 📅 **Lifecycle States**: DRAFT → REGISTRATION → RUNNING → JUDGING → FINISHED
+
+### ⏳ Próximamente
+
+- **Phase 2**: Teams, Submissions, Evaluation System, Leaderboard
+- **Phase 3**: Sponsors, Organizations, Challenges, Shortlist
+
+---
 
 ## 📋 Prerequisites
 
-- Node.js 20.x or 22.x LTS
-- pnpm 9.x or higher
-- PostgreSQL database (Supabase recommended)
-- Clerk account for authentication
-- Supabase account for realtime features
-- Sentry account for monitoring (optional)
+| Requisito | Versión | Propósito |
+|-----------|---------|-----------|
+| **Node.js** | 20.x or 22.x LTS | Runtime |
+| **pnpm** | 10.22.0+ | Package manager |
+| **PostgreSQL** | Latest | Database (Neon serverless) |
+| **Clerk** | Latest | Authentication |
+| **Supabase** | Latest | Real-time client |
+| **Sentry** | Latest | Error monitoring (opcional) |
+
+---
 
 ## 🛠️ Setup Instructions
 
@@ -74,39 +138,122 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ```
 puntohack-mvp-app/
-├── prisma/
-│   ├── schema.prisma       # Database schema (source of truth)
-│   ├── migrations/         # Database migrations
-│   └── seeds/             # Seed scripts
-├── src/
-│   ├── app/               # Next.js App Router
-│   ├── core/              # Core infrastructure
-│   │   ├── db.ts         # Prisma client
-│   │   ├── auth.ts       # Clerk + Profile resolver
-│   │   ├── rbac.ts       # Permission helpers
-│   │   ├── realtime.ts   # Supabase Realtime client
-│   │   ├── errors.ts     # Error handling + Sentry
-│   │   └── config.ts     # Environment config
-│   ├── modules/           # Domain modules
-│   │   ├── users/
-│   │   ├── hackathons/
-│   │   ├── teams/
-│   │   ├── submissions/
-│   │   ├── judging/
-│   │   ├── leaderboard/
-│   │   ├── organizations/
-│   │   ├── sponsorships/
-│   │   └── challenges/
-│   ├── components/        # React components
-│   │   ├── ui/           # Reusable UI components
-│   │   ├── forms/        # Form components
-│   │   └── layouts/      # Layout components
-│   └── lib/              # Utilities
-│       ├── utils/        # Helper functions
-│       ├── hooks/        # Custom React hooks
-│       └── constants/    # Constants
-└── package.json
+├── 📂 prisma/
+│   ├── schema.prisma          # 17 Models - Database Schema ✅
+│   ├── migrations/            # Migration history
+│   └── seeds/                 # Dev seed scripts
+│
+├── 📂 src/
+│   ├── 📂 app/               # Next.js App Router (Route Groups) ✅
+│   │   ├── (auth)/          # Authentication routes ✅
+│   │   │   ├── layout.tsx   # Auth layout (clean)
+│   │   │   ├── sign-in/     # Clerk sign-in
+│   │   │   ├── sign-up/     # Clerk sign-up
+│   │   │   └── onboarding/  # User onboarding flow
+│   │   │
+│   │   ├── (dashboard)/     # User dashboard routes ✅
+│   │   │   ├── layout.tsx   # Dashboard layout (navbar)
+│   │   │   └── dashboard/   # Main dashboard
+│   │   │
+│   │   ├── (admin)/         # Admin routes ✅
+│   │   │   ├── layout.tsx   # Admin layout (RBAC)
+│   │   │   └── admin/       # Admin panel
+│   │   │       ├── page.tsx # Admin dashboard
+│   │   │       └── users/   # User management
+│   │   │
+│   │   ├── _archive/        # Placeholder pages (archived) ✅
+│   │   │   ├── judge/       # Phase 2
+│   │   │   ├── sponsor/     # Phase 3
+│   │   │   └── test-db/     # Testing
+│   │   │
+│   │   ├── layout.tsx       # Root layout
+│   │   ├── page.tsx         # Landing page
+│   │   └── globals.css      # Global styles
+│   │
+│   ├── 📂 core/              # Core Infrastructure ✅
+│   │   ├── index.ts         # Barrel export
+│   │   ├── auth.ts          # Authentication helpers
+│   │   ├── rbac.ts          # RBAC (hasRole, requireRole)
+│   │   ├── db.ts            # Prisma Client Singleton
+│   │   ├── errors.ts        # Error Handling + Sentry
+│   │   ├── config.ts        # Environment Config
+│   │   └── 📂 supabase/     # Supabase clients ✅
+│   │       ├── index.ts     # Barrel export
+│   │       ├── server.ts    # Server client (SSR)
+│   │       ├── client.ts    # Browser client
+│   │       └── realtime.ts  # Realtime subscriptions
+│   │
+│   ├── 📂 modules/           # Domain Modules (Feature-Sliced Design) ✅
+│   │   └── 📂 users/        # Users domain module ✅
+│   │       ├── index.ts     # Barrel export
+│   │       ├── types.ts     # TypeScript interfaces
+│   │       ├── validations.ts # Zod schemas
+│   │       ├── queries.ts   # Data access layer
+│   │       └── actions.ts   # Server Actions
+│   │   # Future modules:
+│   │   # ├── hackathons/    # 🔨 Phase 1
+│   │   # ├── teams/         # ⏳ Phase 2
+│   │   # ├── submissions/   # ⏳ Phase 2
+│   │   # ├── evaluation/    # ⏳ Phase 2
+│   │   # └── sponsors/      # ⏳ Phase 3
+│   │
+│   ├── 📂 components/        # React Components (Organized) ✅
+│   │   ├── 📂 ui/           # Pure UI primitives ✅
+│   │   │   ├── index.ts     # Barrel export
+│   │   │   ├── interactive-button.tsx
+│   │   │   ├── interactive-form.tsx
+│   │   │   ├── button-link.tsx
+│   │   │   └── card-link.tsx
+│   │   │
+│   │   ├── 📂 common/       # Shared business components ✅
+│   │   │   ├── index.ts     # Barrel export
+│   │   │   └── nav-link.tsx
+│   │   │
+│   │   └── 📂 features/     # Feature-specific components ✅
+│   │       ├── users/       # User components (future)
+│   │       └── admin/       # Admin components (future)
+│   │
+│   ├── 📂 lib/               # Utilities & Helpers
+│   │   ├── db/              # Database helpers
+│   │   │   └── queries.ts   # Example queries
+│   │   └── utils.ts         # General utilities
+│   │
+│   ├── middleware.ts         # Clerk Auth Middleware ✅
+│   └── instrumentation.ts    # Sentry Initialization ✅
+│
+├── 📂 docs/                  # 📚 Documentation
+│   ├── README.md            # Documentation Index
+│   ├── ARCHITECTURE.md      # Complete Architecture
+│   ├── DIAGRAMS.md          # Mermaid Diagrams
+│   ├── ROADMAP.md           # Implementation Roadmap
+│   └── PHASE0-REORGANIZATION.md  # Phase 0 refactor plan ✅
+│
+└── package.json              # Dependencies + Scripts
 ```
+
+### 🎯 Architectural Highlights
+
+**Route Groups** (`(auth)`, `(dashboard)`, `(admin)`):
+- Clean URL structure without group names
+- Shared layouts per group
+- RBAC protection at layout level
+
+**Feature-Sliced Design**:
+- Modules organized by domain (users, hackathons, etc.)
+- Clear separation: types → validations → queries → actions
+- Barrel exports for clean imports
+
+**Component Organization**:
+- `ui/` - Pure UI primitives (stateless, reusable)
+- `common/` - Shared business components
+- `features/` - Feature-specific components
+
+**Core Infrastructure**:
+- Centralized Supabase clients (server, client, realtime)
+- RBAC helpers exported from core
+- Error handling with Sentry integration
+
+---
 
 ## 📦 Available Scripts
 
@@ -122,28 +269,80 @@ puntohack-mvp-app/
 - `pnpm db:studio` - Open Prisma Studio
 - `pnpm db:seed` - Seed database with test data
 
-## 🎭 User Roles
+## 🎭 User Roles & Permissions
 
-- **PARTICIPANT** - Create/join teams, submit projects
-- **JUDGE** - Evaluate submissions based on criteria
-- **ORGANIZER** - Manage hackathons, configure criteria, assign judges
-- **ADMIN** - Full access to all features
-- **SPONSOR** - Manage challenges, view submissions, create shortlists
+### Jerarquía de Roles
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  ADMIN - Super Usuario                                  │
+│  • Full Access                                          │
+│  • Puede asignar cualquier rol (incluido ADMIN)         │
+└────────────────────────┬────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────┐
+│  ORGANIZER - Creador de Hackathons                      │
+│  • Create/Manage Hackathons                             │
+│  • Gestionar Usuarios (excepto crear ADMIN)             │
+│  • Access: /admin, /admin/users                         │
+└────────────────────────┬────────────────────────────────┘
+                         │
+        ┌────────────────┼────────────────┐
+        ▼                ▼                ▼
+┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+│   JUDGE      │  │   SPONSOR    │  │ PARTICIPANT  │
+│ • Evaluate   │  │ • Create     │  │ • Register   │
+│   Projects   │  │   Challenges │  │ • Join Teams │
+│ • Score      │  │ • Shortlist  │  │ • Submit     │
+│ (Phase 2)    │  │ (Phase 3)    │  │   Projects   │
+└──────────────┘  └──────────────┘  └──────────────┘
+```
+
+### Matriz de Permisos (Phase 0)
+
+| Recurso | ADMIN | ORGANIZER | JUDGE | SPONSOR | PARTICIPANT |
+|---------|:-----:|:---------:|:-----:|:-------:|:-----------:|
+| `/admin` | ✅ | ✅ | ❌ | ❌ | ❌ |
+| `/admin/users` | ✅ | ✅* | ❌ | ❌ | ❌ |
+| Change ADMIN role | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Change other roles | ✅ | ✅ | ❌ | ❌ | ❌ |
+| View all users | ✅ | ✅ | ❌ | ❌ | ❌ |
+| `/dashboard` | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+\* ORGANIZER puede gestionar usuarios pero **no puede asignar rol ADMIN**
+
+---
 
 ## 🔑 Tech Stack
 
-- **Framework:** Next.js 15 (App Router, RSC-first)
-- **Language:** TypeScript 5.6+
-- **Database:** PostgreSQL (Supabase)
-- **ORM:** Prisma 7.x
-- **Auth:** Clerk
-- **Realtime:** Supabase Realtime
-- **Validation:** Zod
-- **Styling:** Tailwind CSS 4.x
-- **UI Components:** Radix UI
-- **Icons:** Lucide React
-- **Forms:** React Hook Form
-- **Monitoring:** Sentry
+### Frontend Layer
+| Tecnología | Versión | Propósito |
+|-----------|---------|-----------|
+| **Next.js** | 16.0.3 | Framework con App Router + RSC |
+| **React** | 19.2.0 | UI Library con React Compiler |
+| **TypeScript** | 5.x | Type Safety (strict mode) |
+| **Tailwind CSS** | 4.x | Utility-first Styling |
+| **Radix UI** | Latest | Accessible Components |
+| **Lucide React** | 0.554.0 | Icon System |
+
+### Backend & Database
+| Tecnología | Versión | Propósito |
+|-----------|---------|-----------|
+| **Prisma** | 7.0.0 | ORM para PostgreSQL |
+| **Neon PostgreSQL** | - | Serverless Database |
+| **Supabase Client** | 2.83.0 | Real-time DB + Helpers |
+| **Clerk** | 6.35.2 | Authentication & User Management |
+
+### DevOps & Monitoring
+| Tecnología | Versión | Propósito |
+|-----------|---------|-----------|
+| **Sentry** | 10.26.0 | Error Tracking & Performance |
+| **Vercel** | - | Hosting & Deployment |
+| **Zod** | 4.1.12 | Schema Validation |
+| **React Hook Form** | 7.66.1 | Form Management |
+
+---
 
 ## 📝 Development Guidelines
 
@@ -193,12 +392,34 @@ Make sure to set all variables from `.env.example` in your deployment platform w
 
 ## 📚 Documentation
 
-See the `/docs` folder for detailed documentation:
+📖 **Documentación completa disponible en `/docs`**:
 
-- `mvp-definition.md` - Complete technical design
-- `database-definition.md` - Database model details
-- `flows-definition.md` - User flow specifications
-- `development-roadmap.md` - Step-by-step development guide
+| Documento | Descripción | Contenido Principal |
+|-----------|-------------|---------------------|
+| **[README.md](./docs/README.md)** | Índice de Documentación | Quick start, estructura, enlaces |
+| **[ARCHITECTURE.md](./docs/ARCHITECTURE.md)** | Arquitectura Completa | Stack tech, RBAC, modelo de datos, patrones |
+| **[DIAGRAMS.md](./docs/DIAGRAMS.md)** | Diagramas Visuales | Mermaid diagrams, flujos, ERD |
+| **[ROADMAP.md](./docs/ROADMAP.md)** | Plan de Implementación | Phase 1-3 detallado, código de ejemplo |
+
+### Quick Links
+
+- **Para nuevos desarrolladores**: Leer [`docs/README.md`](./docs/README.md) → [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md)
+- **Para entender flujos**: Ver [`docs/DIAGRAMS.md`](./docs/DIAGRAMS.md)
+- **Para desarrollar features**: Consultar [`docs/ROADMAP.md`](./docs/ROADMAP.md)
+
+### Diagramas Disponibles
+
+- ✅ Arquitectura en capas (Frontend → Backend → Data)
+- ✅ Flujo de autenticación y onboarding
+- ✅ Sistema RBAC con jerarquía de roles
+- ✅ Modelo de datos completo (ERD - 17 tablas)
+- ✅ Flujo de user management (Admin Panel)
+- ✅ Arquitectura de módulos (patrón modular)
+- ✅ Roadmap visual (Gantt chart)
+- ✅ Flujo de hackathons (Phase 1)
+- ✅ Flujo de evaluación (Phase 2)
+
+---
 
 ## 🐛 Troubleshooting
 
@@ -224,8 +445,79 @@ pnpm build
 
 ## 📄 License
 
-Private - All rights reserved
+Private - All rights reserved © 2025 PuntoHack
 
-## 🤝 Contributing
+---
 
-This is a private project. Contact the project owner for contribution guidelines.
+## 🤝 Contributing & Contact
+
+**Team**:
+- Lead Developer: Diego RM
+- AI Assistant: GitHub Copilot
+
+**Resources**:
+- GitHub Repo: [PuntoHack-Tech](https://github.com/diego-rm-dev/PuntoHack-Tech)
+- Documentation: [`/docs`](./docs)
+- Issues: GitHub Issues
+
+---
+
+## 📝 Changelog
+
+### v0.1.0 - Phase 0 Complete (2025-11-22) ✅
+
+**Infrastructure Core**:
+- ✅ Next.js 16 + React 19 + App Router
+- ✅ Clerk Authentication integration
+- ✅ Prisma ORM + Neon PostgreSQL setup
+- ✅ Supabase Client para real-time queries
+- ✅ Sistema RBAC completo (5 roles)
+- ✅ Onboarding flow con selección de rol
+- ✅ Admin panel con gestión de usuarios
+- ✅ Sentry error tracking configurado
+- ✅ Módulo `users/` con arquitectura modular
+- ✅ 5 Client Components reutilizables
+- ✅ Middleware de autenticación
+- ✅ TypeScript strict mode
+
+**Línea Base Establecida**:
+```
+Core: rbac.ts, errors.ts, db.ts, supabase.ts
+Modules: users/ (queries, actions, types)
+Components: 5 client components
+Documentation: Complete (4 docs)
+```
+
+### v0.2.0 - Phase 1 (Planned - Week 3)
+
+- 🔨 Hackathons module (CRUD)
+- 🔨 Criteria management
+- 🔨 Participant registration
+- 🔨 Organizer dashboard
+- 🔨 Lifecycle states
+
+### v0.3.0 - Phase 2 (Planned - Week 4-5)
+
+- ⏳ Teams module
+- ⏳ Submissions system
+- ⏳ Evaluation interface
+- ⏳ Leaderboard with scoring
+
+### v0.4.0 - Phase 3 (Planned - Week 6)
+
+- ⏳ Sponsors module
+- ⏳ Organizations management
+- ⏳ Challenges system
+- ⏳ Shortlist feature
+
+---
+
+<div align="center">
+
+**Built with ❤️ by the PuntoHack Team**
+
+[Documentation](./docs) • [Architecture](./docs/ARCHITECTURE.md) • [Diagrams](./docs/DIAGRAMS.md) • [Roadmap](./docs/ROADMAP.md)
+
+**Status**: Phase 0 Complete ✅ | Ready for Phase 1 🚀
+
+</div>

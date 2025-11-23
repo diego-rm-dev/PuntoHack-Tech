@@ -3,6 +3,7 @@ import * as Sentry from '@sentry/nextjs';
 /**
  * Capture error with Sentry and console logging
  * Adds contextual tags for better error tracking
+ * Ignores Next.js redirects and not-found errors (they're not real errors)
  */
 export function captureError(
   error: unknown,
@@ -16,7 +17,27 @@ export function captureError(
     [key: string]: any;
   }
 ) {
-  console.error('Error captured:', error, context);
+  // Ignore Next.js redirects and not-found - they're not errors
+  if (error instanceof Error) {
+    const errorMessage = error.message || '';
+    const errorDigest = (error as any).digest || '';
+    
+    // NEXT_REDIRECT and NEXT_NOT_FOUND are normal Next.js flow control
+    if (
+      errorMessage === 'NEXT_REDIRECT' ||
+      errorMessage === 'NEXT_NOT_FOUND' ||
+      errorDigest.includes('NEXT_REDIRECT') ||
+      errorDigest.includes('NEXT_NOT_FOUND')
+    ) {
+      // Don't log redirects/not-found as errors
+      return;
+    }
+  }
+
+  // Log only in development
+  if (process.env.NODE_ENV === 'development') {
+    console.error('Error captured:', error, context);
+  }
 
   if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
     Sentry.captureException(error, {
@@ -39,7 +60,10 @@ export function captureWarning(
   message: string,
   context?: Record<string, any>
 ) {
-  console.warn('Warning:', message, context);
+  // Log only in development
+  if (process.env.NODE_ENV === 'development') {
+    console.warn('Warning:', message, context);
+  }
 
   if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
     Sentry.captureMessage(message, {
@@ -56,7 +80,10 @@ export function captureInfo(
   message: string,
   context?: Record<string, any>
 ) {
-  console.info('Info:', message, context);
+  // Log only in development
+  if (process.env.NODE_ENV === 'development') {
+    console.info('Info:', message, context);
+  }
 
   if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
     Sentry.captureMessage(message, {

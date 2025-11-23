@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+*.test.log
 
 # next.js
 /.next/
@@ -40,4 +41,14 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# prisma
 /src/generated/prisma
+
+# temp files
+*.tmp
+*.temp
+*.log
+*.old
+*.bak
+setup-logs/
+migration.sql

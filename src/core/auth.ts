@@ -1,5 +1,5 @@
 import { auth, currentUser } from '@clerk/nextjs/server';
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@/core/supabase/server';
 import { cache } from 'react';
 import type { Role } from '@prisma/client';
 

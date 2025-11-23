@@ -46,8 +46,11 @@ if (process.env.NODE_ENV !== 'production') {
   globalForPrisma.prisma = prisma;
 }
 
+// Export default for backward compatibility
+export const db = prisma;
+
 // Re-exportar tipos útiles desde Prisma
 // IMPORTANTE: Usa estos tipos, pero NO uses prisma.* para queries
-// Todas las queries deben ir vía Supabase Client (@/lib/supabase/server)
+// Todas las queries deben ir vía Supabase Client (@/core/supabase/server)
 export type { Profile, Hackathon, Team, Submission } from '@prisma/client';
 

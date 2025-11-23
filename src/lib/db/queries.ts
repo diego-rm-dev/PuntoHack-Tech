@@ -6,7 +6,7 @@
  * sin necesidad de conexión directa a Postgres
  */
 
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@/core/supabase/server';
 
 export async function getProfiles() {
   const supabase = await createClient();

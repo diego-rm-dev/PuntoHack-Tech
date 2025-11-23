@@ -19,6 +19,21 @@ export function assertRole(user: CurrentUser | null, roles: Role[]) {
   }
 }
 
+/**
+ * Require specific role(s) - throws if user doesn't have permission
+ * Use in Server Actions or API routes
+ */
+export async function requireRole(roles: Role | Role[]): Promise<void> {
+  const { requireAuth } = await import('./auth');
+  const user = await requireAuth();
+  
+  const roleArray = Array.isArray(roles) ? roles : [roles];
+  
+  if (!hasRole(user, roleArray)) {
+    throw new ForbiddenError('Insufficient permissions');
+  }
+}
+
 // Hackathon permissions
 export function canManageHackathon(user: CurrentUser | null): boolean {
   return hasRole(user, ['ADMIN', 'ORGANIZER']);

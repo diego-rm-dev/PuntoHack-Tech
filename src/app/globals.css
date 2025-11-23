@@ -27,6 +27,8 @@
   --accent-info: #009ee3;
 }
 
+/* Tailwind v4 theme configuration */
+/* stylelint-disable-next-line at-rule-no-unknown */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

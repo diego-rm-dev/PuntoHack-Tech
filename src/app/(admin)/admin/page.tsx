@@ -3,7 +3,10 @@ import { requireAuth } from '@/core/auth';
 import { assertRole } from '@/core/rbac';
 import { UserButton } from '@clerk/nextjs';
 import { NavLink } from '@/components/common';
-import { InteractiveButton } from '@/components/ui';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
 
 export default async function AdminPage() {
   // Requiere autenticación
@@ -35,154 +38,172 @@ export default async function AdminPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold" style={{ color: '#0b0d0e' }}>Panel de Administración</h2>
-          <p className="mt-2" style={{ color: '#5c5f6e' }}>
-            Bienvenido, {user.profile.name}. Tu rol es <strong style={{ color: '#0b0d0e' }}>{user.profile.role}</strong>
+          <h2 className="text-3xl font-bold">Panel de Administración</h2>
+          <p className="mt-2 text-slate-600">
+            Bienvenido, {user.profile.name}. Tu rol es <Badge>{user.profile.role}</Badge>
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Users - NEW */}
-          <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow" style={{ borderColor: '#e2e4e9', borderWidth: '1px' }}>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#ececfe' }}>
-                <span className="text-2xl">👤</span>
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center">
+                  <span className="text-2xl">👤</span>
+                </div>
+                <div>
+                  <CardTitle>Users</CardTitle>
+                  <CardDescription>Gestión de roles</CardDescription>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-lg" style={{ color: '#0b0d0e' }}>Users</h3>
-                <p className="text-sm" style={{ color: '#838696' }}>Gestión de roles</p>
-              </div>
-            </div>
-            <p className="text-sm mb-4" style={{ color: '#5c5f6e' }}>
-              Administrar usuarios y cambiar roles
-            </p>
-            <a href="/admin/users">
-              <InteractiveButton variant="primary">
-                Gestionar Usuarios
-              </InteractiveButton>
-            </a>
-          </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-slate-600 mb-4">
+                Administrar usuarios y cambiar roles
+              </p>
+              <Link href="/admin/users">
+                <Button className="w-full">Gestionar Usuarios</Button>
+              </Link>
+            </CardContent>
+          </Card>
 
           {/* Hackathons */}
-          <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow" style={{ borderColor: '#e2e4e9', borderWidth: '1px' }}>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#ececfe' }}>
-                <span className="text-2xl">🏆</span>
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center">
+                  <span className="text-2xl">🏆</span>
+                </div>
+                <div>
+                  <CardTitle>Hackathons</CardTitle>
+                  <CardDescription>Gestionar eventos</CardDescription>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-lg" style={{ color: '#0b0d0e' }}>Hackathons</h3>
-                <p className="text-sm" style={{ color: '#838696' }}>Gestionar eventos</p>
-              </div>
-            </div>
-            <p className="text-sm mb-4" style={{ color: '#5c5f6e' }}>
-              Crear, editar y administrar hackathons
-            </p>
-            <InteractiveButton variant="primary">
-              Ver Hackathons
-            </InteractiveButton>
-          </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-slate-600 mb-4">
+                Crear, editar y administrar hackathons
+              </p>
+              <Link href="/hackathons">
+                <Button className="w-full">Ver Hackathons</Button>
+              </Link>
+            </CardContent>
+          </Card>
 
           {/* Criterios */}
-          <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow" style={{ borderColor: '#e2e4e9', borderWidth: '1px' }}>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#ececfe' }}>
-                <span className="text-2xl">📊</span>
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center">
+                  <span className="text-2xl">📊</span>
+                </div>
+                <div>
+                  <CardTitle>Criterios</CardTitle>
+                  <CardDescription>Evaluación</CardDescription>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-lg" style={{ color: '#0b0d0e' }}>Criterios</h3>
-                <p className="text-sm" style={{ color: '#838696' }}>Evaluación</p>
-              </div>
-            </div>
-            <p className="text-sm mb-4" style={{ color: '#5c5f6e' }}>
-              Configurar criterios de evaluación
-            </p>
-            <InteractiveButton variant="primary">
-              Gestionar Criterios
-            </InteractiveButton>
-          </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-slate-600 mb-4">
+                Configurar criterios de evaluación
+              </p>
+              <Button className="w-full" disabled>Gestionar Criterios</Button>
+            </CardContent>
+          </Card>
 
           {/* Jueces */}
-          <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow" style={{ borderColor: '#e2e4e9', borderWidth: '1px' }}>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#e6f7ed' }}>
-                <span className="text-2xl">⚖️</span>
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center">
+                  <span className="text-2xl">⚖️</span>
+                </div>
+                <div>
+                  <CardTitle>Jueces</CardTitle>
+                  <CardDescription>Asignación</CardDescription>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-lg" style={{ color: '#0b0d0e' }}>Jueces</h3>
-                <p className="text-sm" style={{ color: '#838696' }}>Asignación</p>
-              </div>
-            </div>
-            <p className="text-sm mb-4" style={{ color: '#5c5f6e' }}>
-              Asignar jueces a hackathons
-            </p>
-            <InteractiveButton variant="success">
-              Gestionar Jueces
-            </InteractiveButton>
-          </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-slate-600 mb-4">
+                Asignar jueces a hackathons
+              </p>
+              <Button className="w-full" variant="outline" disabled>Gestionar Jueces</Button>
+            </CardContent>
+          </Card>
 
           {/* Patrocinadores */}
-          <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow" style={{ borderColor: '#e2e4e9', borderWidth: '1px' }}>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#fffcf7' }}>
-                <span className="text-2xl">🏢</span>
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-lg bg-yellow-50 flex items-center justify-center">
+                  <span className="text-2xl">🏢</span>
+                </div>
+                <div>
+                  <CardTitle>Patrocinadores</CardTitle>
+                  <CardDescription>Sponsors</CardDescription>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-lg" style={{ color: '#0b0d0e' }}>Patrocinadores</h3>
-                <p className="text-sm" style={{ color: '#838696' }}>Sponsors</p>
-              </div>
-            </div>
-            <p className="text-sm mb-4" style={{ color: '#5c5f6e' }}>
-              Gestionar organizaciones y patrocinios
-            </p>
-            <InteractiveButton variant="warning">
-              Ver Patrocinadores
-            </InteractiveButton>
-          </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-slate-600 mb-4">
+                Gestionar organizaciones y patrocinios
+              </p>
+              <Button className="w-full" variant="outline" disabled>Ver Patrocinadores</Button>
+            </CardContent>
+          </Card>
 
           {/* Equipos */}
-          <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow" style={{ borderColor: '#e2e4e9', borderWidth: '1px' }}>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#ececfe' }}>
-                <span className="text-2xl">👥</span>
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center">
+                  <span className="text-2xl">👥</span>
+                </div>
+                <div>
+                  <CardTitle>Equipos</CardTitle>
+                  <CardDescription>Participantes</CardDescription>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-lg" style={{ color: '#0b0d0e' }}>Equipos</h3>
-                <p className="text-sm" style={{ color: '#838696' }}>Participantes</p>
-              </div>
-            </div>
-            <p className="text-sm mb-4" style={{ color: '#5c5f6e' }}>
-              Ver equipos y participantes registrados
-            </p>
-            <InteractiveButton variant="primary">
-              Ver Equipos
-            </InteractiveButton>
-          </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-slate-600 mb-4">
+                Ver equipos y participantes registrados
+              </p>
+              <Button className="w-full" disabled>Ver Equipos</Button>
+            </CardContent>
+          </Card>
 
           {/* Resultados */}
-          <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow" style={{ borderColor: '#e2e4e9', borderWidth: '1px' }}>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#fffcf7' }}>
-                <span className="text-2xl">📈</span>
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-lg bg-yellow-50 flex items-center justify-center">
+                  <span className="text-2xl">📈</span>
+                </div>
+                <div>
+                  <CardTitle>Resultados</CardTitle>
+                  <CardDescription>Leaderboard</CardDescription>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-lg" style={{ color: '#0b0d0e' }}>Resultados</h3>
-                <p className="text-sm" style={{ color: '#838696' }}>Leaderboard</p>
-              </div>
-            </div>
-            <p className="text-sm mb-4" style={{ color: '#5c5f6e' }}>
-              Ver rankings y estadísticas
-            </p>
-            <InteractiveButton variant="warning">
-              Ver Resultados
-            </InteractiveButton>
-          </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-slate-600 mb-4">
+                Ver rankings y estadísticas
+              </p>
+              <Button className="w-full" variant="outline" disabled>Ver Resultados</Button>
+            </CardContent>
+          </Card>
         </div>
 
-        <div className="mt-8 rounded-lg p-4" style={{ backgroundColor: '#ececfe', borderColor: '#606fe5', borderWidth: '1px' }}>
-          <p className="text-sm" style={{ color: '#1a284e' }}>
-            ℹ️ <strong>RBAC Activo:</strong> Esta página solo es accesible para usuarios con rol ADMIN u ORGANIZER.
-          </p>
-        </div>
+        <Card className="mt-8 bg-blue-50 border-blue-200">
+          <CardContent className="p-4">
+            <p className="text-sm text-blue-900">
+              ℹ️ <strong>RBAC Activo:</strong> Esta página solo es accesible para usuarios con rol ADMIN u ORGANIZER.
+            </p>
+          </CardContent>
+        </Card>
       </main>
     </div>
   );

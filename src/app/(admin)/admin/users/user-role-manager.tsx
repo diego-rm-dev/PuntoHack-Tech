@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { updateUserRoleAction } from './actions';
+import { Badge } from '@/components/ui/badge';
 
 interface UserRoleManagerProps {
   profileId: string;
@@ -57,18 +58,8 @@ export function UserRoleManager({
     // Can't change your own role
     return (
       <div className="flex items-center gap-2">
-        <span
-          className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
-          style={{
-            backgroundColor: colors.bg,
-            color: colors.text,
-          }}
-        >
-          {role}
-        </span>
-        <span className="text-xs" style={{ color: '#838696' }}>
-          (You)
-        </span>
+        <Badge>{role}</Badge>
+        <span className="text-xs text-slate-500">(You)</span>
       </div>
     );
   }
@@ -79,12 +70,7 @@ export function UserRoleManager({
         value={role}
         onChange={(e) => handleRoleChange(e.target.value)}
         disabled={isUpdating}
-        className="px-3 py-1 rounded-lg border-2 text-sm font-medium transition-all focus:outline-none focus:border-[#606fe5] disabled:opacity-50 disabled:cursor-not-allowed"
-        style={{
-          borderColor: '#e2e4e9',
-          backgroundColor: '#ffffff',
-          color: '#0b0d0e',
-        }}
+        className="px-3 py-1 rounded-lg border-2 text-sm font-medium transition-all focus:outline-none focus:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed bg-white"
       >
         <option value="PARTICIPANT">Participant</option>
         <option value="JUDGE">Judge</option>
@@ -97,12 +83,9 @@ export function UserRoleManager({
       </select>
 
       {message && (
-        <span
-          className="text-xs font-medium"
-          style={{
-            color: message.startsWith('✓') ? '#19a44b' : '#e43157',
-          }}
-        >
+        <span className={`text-xs font-medium ${
+          message.startsWith('✓') ? 'text-green-600' : 'text-red-600'
+        }`}>
           {message}
         </span>
       )}

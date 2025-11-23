@@ -80,7 +80,8 @@ export function DateTimePicker({
  */
 
 // Convert Date to datetime-local format (YYYY-MM-DDTHH:mm)
-export function dateToDateTimeLocal(date: Date): string {
+export function dateToDateTimeLocal(date: Date | null): string {
+  if (!date) return '';
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
@@ -91,8 +92,10 @@ export function dateToDateTimeLocal(date: Date): string {
 }
 
 // Convert datetime-local format to Date
-export function dateTimeLocalToDate(dateTimeLocal: string): Date {
-  return new Date(dateTimeLocal);
+export function dateTimeLocalToDate(dateTimeLocal: string): Date | null {
+  if (!dateTimeLocal || dateTimeLocal.trim() === '') return null;
+  const date = new Date(dateTimeLocal);
+  return isNaN(date.getTime()) ? null : date;
 }
 
 // Get current datetime in datetime-local format
@@ -101,8 +104,11 @@ export function getCurrentDateTimeLocal(): string {
 }
 
 // Format datetime-local for display
-export function formatDateTimeLocal(dateTimeLocal: string, locale: string = 'en-US'): string {
-  const date = dateTimeLocalToDate(dateTimeLocal);
+export function formatDateTimeLocal(date: Date | string | null, locale: string = 'en-US'): string {
+  if (!date) return '';
+  const dateObj = typeof date === 'string' ? dateTimeLocalToDate(date) : date;
+  if (!dateObj || !(dateObj instanceof Date) || isNaN(dateObj.getTime())) return '';
+  
   return new Intl.DateTimeFormat(locale, {
     year: 'numeric',
     month: 'short',
